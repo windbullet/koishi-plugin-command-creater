@@ -1,19 +1,20 @@
-import { Context, Schema } from 'koishi'
+import { Context, Dict, Schema } from 'koishi'
 
 export const name = 'command-creater'
 
 export interface Command {
   name: string
-  cmdAlias: string[]
-  cmdDescription: string
-  reply: string
+  content: string
+  mode: 'reply' | 'execute'
 }
 
 export const Command: Schema<Command> = Schema.object({
   name: Schema.string().description("指令名").required(),
-  cmdAlias: Schema.array(Schema.string()).description("指令别名 (可选项)"),
-  cmdDescription: Schema.string().description("指令说明 (可选项)"),
-  reply: Schema.string().description("指令的回复").required(),
+  content: Schema.string().description("指令内容").required(),
+  mode: Schema.union([
+    Schema.const("reply").description("发送指令内容"),
+    Schema.const("execute").description("调用指令内容")
+  ]).description("触发指令后").role("radio").required()
 })
 
 export interface Config {
@@ -26,13 +27,17 @@ export const Config: Schema<Config> = Schema.object({
 
 export function apply(ctx: Context, config: Config) {
   for (const command of config.commands) {
-    ctx.command(command.name, command.cmdDescription ? command.cmdDescription : '')
+    ctx.command(command.name)
       .action(({session}) => {
-        session.send(command.reply)
+        switch (command.mode) {
+          case 'reply':
+            session.send(command.content)
+            break
+          case 'execute':
+            session.execute(command.content)
+            break
+        }
       })
     
-    for (const cmdAlias of command.cmdAlias) {
-      ctx.command(command.name).alias(cmdAlias)
-    }
   }
 }
