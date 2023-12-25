@@ -11,8 +11,8 @@ export interface Command {
 
 export const Command: Schema<Command> = Schema.object({
   name: Schema.string().description("指令名").required(),
-  cmdAlias: Schema.array(Schema.string()).description("指令别名"),
-  cmdDescription: Schema.string().description("指令说明"),
+  cmdAlias: Schema.array(Schema.string()).description("指令别名 (可选项)"),
+  cmdDescription: Schema.string().description("指令说明 (可选项)"),
   reply: Schema.string().description("指令的回复").required(),
 })
 

@@ -1,7 +1,7 @@
 {
   "name": "koishi-plugin-command-creater",
   "description": "创建自定义指令回复指定内容，支持自定义指令别名及说明等",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
   "files": [
