@@ -2,6 +2,8 @@ import { Context, Schema } from 'koishi'
 
 export const name = 'command-creater'
 
+export const usage = "更新日志：https://forum.koishi.xyz/t/topic/6290"
+
 export interface Command {
   name: string
   content: string
