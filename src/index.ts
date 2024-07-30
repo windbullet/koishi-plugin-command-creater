@@ -1,4 +1,4 @@
-import { Context, Dict, Schema } from 'koishi'
+import { Context, Schema } from 'koishi'
 
 export const name = 'command-creater'
 
@@ -28,13 +28,14 @@ export const Config: Schema<Config> = Schema.object({
 export function apply(ctx: Context, config: Config) {
   for (const command of config.commands) {
     ctx.command(command.name)
-      .action(({session}) => {
+      .action(async ({session}) => {
         switch (command.mode) {
           case 'reply':
-            session.send(command.content)
-            break
+            await session.send(command.content)
           case 'execute':
-            session.execute(command.content)
+            let content = session.content.split(" ")
+            content.shift()
+            await session.execute(`${command.content} ${content.join(" ")}`)
             break
         }
       })
