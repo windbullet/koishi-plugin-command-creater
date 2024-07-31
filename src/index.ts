@@ -37,7 +37,7 @@ export function apply(ctx: Context, config: Config) {
           case 'execute':
             let content = session.content.split(" ")
             content.shift()
-            await session.execute(`${command.content} ${content.join(" ")}`)
+            await session.execute(`${command.content}${content.length > 0 ? content.join(" ") : ""}`)
             break
         }
       })
