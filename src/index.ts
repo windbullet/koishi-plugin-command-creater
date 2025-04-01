@@ -29,15 +29,14 @@ export const Config: Schema<Config> = Schema.object({
 
 export function apply(ctx: Context, config: Config) {
   for (const command of config.commands) {
-    ctx.command(command.name)
-      .action(async ({session}) => {
+    ctx.command(`${command.name} [parameter:text]`)
+      .action(async ({session}, parameter) => {
         switch (command.mode) {
           case 'reply':
             await session.send(command.content)
+            break
           case 'execute':
-            let content = session.content.split(" ")
-            content.shift()
-            await session.execute(`${command.content}${content.length > 0 ? content.join(" ") : ""}`)
+            await session.execute(`${command.content} ${parameter ?? ""}`)
             break
         }
       })
